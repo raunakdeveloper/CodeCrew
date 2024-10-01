@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Crew</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap');
+
+        :root {
+            --primary-color: #1a73e8;
+            /* Bright Blue */
+            --secondary-color: rgb(255, 215, 38);
+            /* Yellow Accent */
+            --background-color: #202124;
+            /* Dark Background */
+            --text-color: #e8eaed;
+            /* Light Text */
+            --modal-background: #2c2f33;
+            /* Darker Modal Background */
+            --input-background: #3a3d42;
+            /* Input Fields Background */
+            --input-text-color: #ffffff;
+            /* Input Text Color */
+            --close-icon-color: #ffffff;
+            /* Close Icon Color */
+            --toggle-active-color: #1a73e8;
+            /* Active Toggle Color */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            font-family: "Poppins", system-ui;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .wrapper {
+            height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            height: 100vh;
+            margin: 0 auto;
+        }
+
+        .nav-bar {
+            padding: 0 2rem;
+            height: 60px;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            position: relative;
+            box-shadow: 0 0 8px 0 rgba(31, 16, 16, 0.8);
+        }
+
+        .logo-part {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-part h1 {
+            color: var(--text-color);
+            margin-left: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .logo-part i {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: center;
+            gap: 2.5vw;
+        }
+
+        .nav-items a {
+            text-decoration: none;
+            font-size: 1rem;
+            color: var(--text-color);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-items a:hover {
+            color: var(--secondary-color);
+        }
+
+        .nav-button {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-button .signup {
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: var(--secondary-color);
+            color: var(--background-color);
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .nav-button .signup:hover {
+            background-color: #e6b72b;
+            /* Darker Yellow on Hover */
+        }
+
+        .signup:active {
+            transform: scale(0.98);
+        }
+
+        .hamburger {
+            display: none;
+            color: var(--text-color);
+        }
+
+        .mobile-nav {
+            position: absolute;
+            top: 80px;
+            left: 0;
+            right: 0;
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.6);
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1.2rem;
+            text-align: center;
+            transform: translateY(-20px);
+            transition: all 0.3s ease-in-out;
+            display: none;
+        }
+
+        .mobile-nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--secondary-color);
+        }
+
+        .mobile-nav .signup {
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+            color: var(--background-color);
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 60%;
+            margin: 0.5rem auto;
+        }
+
+        .mobile-nav .signup:hover {
+            background-color: #ffcd38;
+            /* Darker Yellow on Hover */
+        }
+
+        .login-register-page {
+            position: fixed;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            height: 100vh;
+            width: 100vw;
+            top: 0;
+            left: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-register-modal {
+            background: var(--modal-background);
+            padding: 2rem;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .head-part {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .head-part h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .head-part i {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--close-icon-color);
+            transition: color 0.3s ease;
+        }
+
+        .head-part i:hover {
+            color: #ff4d4d;
+            /* Red on Hover */
+        }
+
+        .login-register-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-register-toggle div {
+            cursor: pointer;
+            padding-bottom: 0.5rem;
+            color: var(--text-color);
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+        }
+
+        .login-register-toggle .log.active,
+        .login-register-toggle .reg.active {
+            border-bottom: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        #formContainer form {
+            display: none;
+        }
+
+        #formContainer form.show {
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background-color: var(--input-background);
+            color: var(--input-text-color);
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #1669c1;
+            /* Darker Blue on Hover */
+        }
+
+        input[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        .main-container {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background: var(--background-color);
+            height: 400px;
+            padding: 2rem;
+        }
+
+        .main-heading {
+            margin-top: 2.5rem;
+            font-size: 3rem;
+            color: var(--text-color);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .main-heading span {
+            color: var(--secondary-color);
+        }
+
+        .main-para {
+            color: var(--text-color);
+            font-size: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        .main-btn-box {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            width: 60%;
+            /* flex-wrap: wrap; */
+        }
+
+        .main-btn-box .main-btn {
+            border-radius: 10px;
+            height: 50px;
+            width: 150px;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .main-btn-box .main-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .main-btn-box .main-btn:active {
+            transform: scale(0.98);
+        }
+
+        #joinBtn {
+            /* Specific styles for Join Now button if needed */
+        }
+
+        #learnBtn {
+            /* Specific styles for Learn More button if needed */
+            background-color: #34a853;
+            /* Green for Learn More */
+        }
+
+        #learnBtn:hover {
+            background-color: #2c8c45;
+            /* Darker Green on Hover */
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+                font-size: 2.5rem;
+                padding-top: .5rem;
+                padding-right: .5rem;
+                cursor: pointer;
+            }
+
+            .nav-bar {
+                padding: 0 1rem;
+            }
+
+            .nav-items {
+                display: none;
+            }
+
+            .nav-button {
+                display: none;
+            }
+
+            .mobile-nav .signup {
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem 1rem;
+                border-radius: 5px;
+                background-color: var(--secondary-color);
+                color: var(--background-color);
+                margin: 0.5rem auto;
+                width: 60%;
+                transition: background-color 0.3s ease, transform 0.1s ease;
+            }
+
+            .mobile-nav .signup:hover {
+                background-color: #e0a800;
+                /* Darker Yellow on Hover */
+            }
+        }
+
+        @media (max-width:550px) {
+            .main-btn-box {
+                gap: 0.8rem;
+                width: 50%;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <!-- Nav Bar -->
+            <div class="nav-bar">
+                <!-- Logo -->
+                <div class="logo-part">
+                    <i class="ri-code-s-slash-line"></i>
+                    <h1>Codecrew</h1>
+                </div>
+                <!-- Navigation Links -->
+                <div class="nav-items">
+                    <a href="#">Home</a>
+                    <a href="#">Features</a>
+                    <a href="#">Contact</a>
+                </div>
+                <!-- Login/Register Button -->
+                <div class="nav-button">
+                    <button class="signup">Login/Register</button>
+                </div>
+                <!-- Hamburger Icon for Mobile -->
+                <i class="hamburger ri-menu-line"></i>
+
+                <!-- Mobile Navigation Menu -->
+                <div class="mobile-nav">
+                    <a href="#">Home</a>
+                    <a href="#">Features</a>
+                    <a href="#">Contact</a>
+                    <button class="signup">Login/Register</button>
+                </div>
+            </div>
+
+            <!-- Login and Register Modal -->
+            <div class="login-register-page" id="loginRegisterPage">
+                <div class="login-register-modal">
+                    <div class="head-part">
+                        <h3 id="formTitle">Login</h3>
+                        <i class="ri-close-line" id="closeModal"></i>
+                    </div>
+                    <div class="login-register-toggle">
+                        <div class="log active" id="logToggle">Login</div>
+                        <div class="reg" id="regToggle">Register</div>
+                    </div>
+                    <div id="formContainer">
+                        <!-- Login Form -->
+                        <form id="loginForm" class="show">
+                            <input type="email" placeholder="Enter Email" required>
+                            <input type="password" placeholder="Enter Password" required>
+                            <input type="submit" value="Login">
+                        </form>
+                        <!-- Register Form -->
+                        <form id="registerForm">
+                            <input type="text" placeholder="Enter Name" required>
+                            <input type="email" placeholder="Enter Email" required>
+                            <input type="password" placeholder="Enter Password" required>
+                            <input type="submit" value="Register">
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-container">
+                <div class="main-heading">
+                    Welcome to <span>CodeCrew</span>
+                </div>
+                <div class="main-para">
+                    Empowering coders for a better tomorrow.
+                </div>
+                <div class="main-btn-box">
+                    <div class="main-btn" id="joinBtn">
+                        Join Now >
+                    </div>
+                    <div class="main-btn" id="learnBtn">
+                        Learn More >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const mobileNav = document.querySelector('.mobile-nav');
+        const loginRegisterPage = document.querySelector('.login-register-page');
+        const loginRegisterButton = document.querySelectorAll('.signup');
+        const closeModal = document.getElementById('closeModal');
+        const loginForm = document.getElementById('loginForm');
+        const registrationForm = document.getElementById('registerForm');
+        const toggleLogin = document.getElementById('logToggle');
+        const toggleRegister = document.getElementById('regToggle');
+        const joinBtn = document.getElementById('joinBtn');
+
+        // Toggle Mobile Navigation on Hamburger Click
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('ri-menu-line');
+            hamburger.classList.toggle('ri-close-line');
+            mobileNav.classList.toggle('show');
+            if (mobileNav.classList.contains('show')) {
+                mobileNav.style.display = 'flex';
+            } else {
+                mobileNav.style.display = 'none';
+            }
+        });
+
+        // Show Login/Register Modal when "Join Now" or "Login/Register" Button is Clicked
+        loginRegisterButton.forEach(button => {
+            button.addEventListener('click', () => {
+                loginRegisterPage.style.display = 'flex';
+            });
+        });
+
+        joinBtn.addEventListener('click', () => {
+            loginRegisterPage.style.display = 'flex';
+        });
+
+        // Close Modal on Clicking the Close Icon
+        closeModal.addEventListener('click', () => {
+            loginRegisterPage.style.display = 'none';
+        });
+
+        // Toggle Between Login and Register Forms
+        toggleLogin.addEventListener('click', () => {
+            loginForm.classList.add('show');
+            registrationForm.classList.remove('show');
+            toggleLogin.classList.add('active');
+            toggleRegister.classList.remove('active');
+            document.getElementById('formTitle').textContent = 'Login';
+        });
+
+        toggleRegister.addEventListener('click', () => {
+            registrationForm.classList.add('show');
+            loginForm.classList.remove('show');
+            toggleRegister.classList.add('active');
+            toggleLogin.classList.remove('active');
+            document.getElementById('formTitle').textContent = 'Register';
+        });
+
+        // Handle Window Resize to Reset Mobile Navigation
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                mobileNav.style.display = 'none';
+                mobileNav.classList.remove('show');
+                hamburger.classList.remove('ri-close-line');
+                hamburger.classList.add('ri-menu-line');
+            }
+        });
+    </script>
+</body>
+
+</html>
